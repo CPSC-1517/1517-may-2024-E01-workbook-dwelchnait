@@ -1,5 +1,5 @@
-# Basic Starter Kit
+# 1517 workbook repository
 
-## Owner your name
+## Owner Don Welch
 
-alter this statement to indicate the usage of this repository
+this repo will be used to code the classroom demos. this repo will be made public so that my student can obtain a copy of all the class time demos. NO CODE that is order marks will be in this repo.
