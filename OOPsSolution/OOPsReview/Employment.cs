@@ -65,7 +65,7 @@ namespace OOPsReview
         //the private set will NOT allow a piece of code outside of this class
         //  to change the value of the property
         //this will force any code using this class to set the Level either by
-        //  the a constructor OR a behaviour
+        //  the a constructor OR a behaviour (method)
         //it basically makes the Level a read only field when accessed directly
         public SupervisoryLevel Level
         {
@@ -90,13 +90,19 @@ namespace OOPsReview
         public double Years
         {
             get { return _Years; }
-            set 
-            {
+            //set 
+            //{
 
-                if (value < 0)
-                {
-                    throw new ArgumentOutOfRangeException($"Year value {value} is invalid. Must be 0 or greater.");
-                }
+            //    if (value < 0)
+            //    {
+            //        throw new ArgumentOutOfRangeException($"Year value {value} is invalid. Must be 0 or greater.");
+            //    }
+            //    _Years = value;
+            //}
+            private set
+            {
+                //if the set was private validation could be elsewhere
+              
                 _Years = value;
             }
         }
@@ -105,13 +111,135 @@ namespace OOPsReview
         //therefore no private data member is required
         //the system will generate an internal storage area for the data
         //      and handle the setting and retreiving from that storage area
-        //the private set means that the property will only be able to be
-        //      set via a constructor or behaviour
+        
         public DateTime StartDate { get; set; }
 
         //constructors
+        //your class does not technically need a constructor
+        //if you code a constructor for your class you are responsible for coding ALL constructors
+        //if you do not code a constructor then the system will assign the software datatype defaults
+        //  to your variables (data members)
+
+        //syntax: accesslevel constructorname([list of parameters]) { .... }
+        //NOTE: NO return datatype
+        //      the constructorname MUST be the class name
+
+        //Default
+        //simulates the "sysem defaults"
+        public Employment()
+        {
+            //if there is no code within this constructor, the actions for setting
+            //  your internal fields will be using the system defaults for the datatype
+
+            //optionally
+            // you could assign values to your intal fields within this constructor typically
+            // using literal values
+            //Why?
+            // your internal fields may have validation attached to the data for the field
+            // this validation is usually within the property
+            // you would wish to have valid data values for your internal fields
+            Title ="unknown";
+            Level = SupervisoryLevel.TeamMember;
+            StartDate = DateTime.Today;
+
+            //Years?
+            //the defualt is fine (0)
+            //however if you wish you could actually assign the value 0
+            Years = 0.0;
+        }
+     
+        //Greedy
+        //this is the constructor typically used to assign values to a instance at the time of
+        //    creation
+        //the list of parameters may or maynot contain default parameter values
+        //if you have assigned default parameter values then those parameters MUST be at the end of
+        //  the parameter list
+        public Employment(string title, SupervisoryLevel level,
+                            DateTime startdate, double years = 0.0)
+        {
+            //here, year is a parameter with a defualt value
+            Title = title;
+            Level = level;
+            Years = years;
+
+            //one could add valiation, especially if the property has a private set  OR the property
+            //  is an auto-implemented property that has restrictions
+            //example
+            //validation, start date must not exist in the future
+            //validation can be done anywhere in your class
+            //since the property is auto-implemented AND/OR has a private set,
+            //      validation can be done  in the constructor OR a behaviour 
+            //      that alters the property
+            //IF the validation is done in the property, IT WOULD NOT be an
+            //      auto-implemented property BUT a fully-implemented property
+            // .Today has a time of 00:00:00 AM
+            // .Now has a specific time of day 13:05:45 PM
+            //by using the .Today.AddDays(1) you cover all times on a specific date
+
+            if (startdate >= DateTime.Today.AddDays(1))
+            {
+                throw new ArgumentException($"The start date {startdate} is in the future.");
+            }
+            StartDate = startdate;
+        }
+
+
 
         //methods
 
+        //syntax: access returndatatype methodname ([list of parameters]) { ..... }
+
+        //REMEMBER: YOU HAVE ACCESS TO ALL VALUES WITHIN THE INSTANCE SO YOU DO NOT
+        //          HAVE TO PASS IN VALUES THAT ARE ALREADY CONTAINED IN THE INSTANCE.
+
+        public void SetEmploymentResponsibilityLevel(SupervisoryLevel level)
+        {
+            //the property has a private set
+            //the property has validation, therefore, if I assign the parameter via the property
+            //  the validation in the property will check the value
+            Level = level;
+        }
+
+        //override the default class method called ToString()
+        public override string ToString()
+        {
+            //this string is known as a "comma separate value" string (csv)
+            return $"{Title},{Level},{StartDate.ToString("MMM dd yyyy")},{Years}";
+        }
+
+        //even though you could possible change a property directly
+        //there is nothing to say, can I also do it in a method?
+        public void CorrectStartDate(DateTime startdate)
+        {
+            //if the property does NOT have validation in it AND you need to apply validation
+            //  then you would have to include the validation within this method.
+            if (startdate >= DateTime.Today.AddDays(1))
+            {
+                throw new ArgumentException($"The start date {startdate} is in the future.");
+            }
+            StartDate = startdate;
+        }
+
+        public double TerminationPay(double salary)
+        {
+            //example of a method using values ALREADY in the instance
+            //note: the value within in the instance DOES NOT need to be passed into the method
+
+            double pay = 0.0;
+            double weeks = 0.0;
+            weeks = Years * 52; //using the value already in the instance
+            pay = weeks > 260 ? salary : weeks / 260 * salary;
+
+            //if (weeks > 260)
+            //{
+            //    pay = salary;
+            //}
+            //else
+            //{
+            //    pay =  weeks / 260 * salary;
+
+            //}
+            return pay;
+        }
     }
 }
