@@ -182,16 +182,25 @@ namespace OOPsReview
             }
             StartDate = startdate;
 
+            //Wait to add this until doing unit tests demonstration
+            //this will demonstrate a missed requirement caught by a unit test
             //add the generation of the years when the default values exists
             //this was discovered by the failure of the unit test for the constructor
-            if (years == 0)
+            if (years < 0)
             {
-                TimeSpan days = DateTime.Today - startdate;
-                Years = Math.Round((days.Days / 365.2), 1);
+                throw new ArgumentOutOfRangeException($"Year value of {years} is invalid. Cannot be negative");
             }
             else
             {
-                Years = years;
+                if (years == 0)
+                {
+                    TimeSpan days = DateTime.Today - startdate;
+                    Years = Math.Round((days.Days / 365.2), 1);
+                }
+                else
+                {
+                    Years = years;
+                }
             }
         }
 
@@ -230,28 +239,42 @@ namespace OOPsReview
                 throw new ArgumentException($"The start date {startdate} is in the future.");
             }
             StartDate = startdate;
+
+            //add the generation of the years when the date is updated
+            //this assumes that this is the most current employment
+
+            TimeSpan days = DateTime.Today - startdate;
+            Years = Math.Round((days.Days / 365.2), 1);
+
         }
 
-        public double TerminationPay(double salary)
-        {
-            //example of a method using values ALREADY in the instance
-            //note: the value within in the instance DOES NOT need to be passed into the method
+        //this is a discussion method and NOT part of the Employment class
+        //topic: Does one have to pass in data to a method if the data is part of the instance
+        //       The answer is NO.
+        //Logic: the instance needs to exist to call the method
+        //       the data needs to exist to create the instance
+        //       therefore the data is already in the instance
+        //       thus the data does NOT need to be passed into the method, simply accessed
+        //          from within the instance.
+        //public double TerminationPay(double salary)
+        //{
 
-            double pay = 0.0;
-            double weeks = 0.0;
-            weeks = Years * 52; //using the value already in the instance
-            pay = weeks > 260 ? salary : weeks / 260 * salary;
+        //    double pay = 0.0;
+        //    double weeks = 0.0;
+        //    weeks = Years * 52; //using the value already in the instance
+        //    pay = weeks > 260 ? salary : weeks / 260 * salary;
 
-            //if (weeks > 260)
-            //{
-            //    pay = salary;
-            //}
-            //else
-            //{
-            //    pay =  weeks / 260 * salary;
+        //    //rewrite of statement as if statement
+        //    //if (weeks > 260)
+        //    //{
+        //    //    pay = salary;
+        //    //}
+        //    //else
+        //    //{
+        //    //    pay =  weeks / 260 * salary;
 
-            //}
-            return pay;
-        }
+        //    //}
+        //    return pay;
+        //}
     }
 }
