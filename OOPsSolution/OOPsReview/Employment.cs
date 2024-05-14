@@ -160,7 +160,7 @@ namespace OOPsReview
             //here, year is a parameter with a defualt value
             Title = title;
             Level = level;
-            Years = years;
+            //Years = years; incorrect due to unit testing
 
             //one could add valiation, especially if the property has a private set  OR the property
             //  is an auto-implemented property that has restrictions
@@ -181,6 +181,18 @@ namespace OOPsReview
                 throw new ArgumentException($"The start date {startdate} is in the future.");
             }
             StartDate = startdate;
+
+            //add the generation of the years when the default values exists
+            //this was discovered by the failure of the unit test for the constructor
+            if (years == 0)
+            {
+                TimeSpan days = DateTime.Today - startdate;
+                Years = Math.Round((days.Days / 365.2), 1);
+            }
+            else
+            {
+                Years = years;
+            }
         }
 
 
