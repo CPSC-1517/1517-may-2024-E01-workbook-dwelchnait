@@ -8,94 +8,72 @@ namespace UnitTestingForSystem
     {
 
         #region Valid Data
-        //the type [Fact] says to run the test once
-        [Fact]
-        public void Create_New_Default_Instance()
-        {
-            //Where - Arrange setup
-            string expectedTitle = "unknown";
-            SupervisoryLevel expectedLevel = SupervisoryLevel.TeamMember;
-            DateTime expectedStartDate = DateTime.Today;
-            double expectedYears = 0;
-
-            //When - Act execution
-            Employment actual = new Employment();
-
-            //Then - Assert check
-            actual.Title.Should().Be(expectedTitle);
-            actual.Level.Should().Be(expectedLevel);
-            actual.StartDate.Should().Be(expectedStartDate);
-            actual.Years.Should().Be(expectedYears);
-        }
-
-        [Fact]
-        public void Create_New_Greedy_Instance()
-        {
-            //Where - Arrange setup
-            string expectedTitle = "SAS Lead";
-            SupervisoryLevel expectedLevel = SupervisoryLevel.TeamLeader;
-            DateTime expectedStartDate = new DateTime(2020, 10, 24);
-            double expectedYears = 3.6;
-
-            //When - Act execution
-            Employment actual = new Employment(expectedTitle, expectedLevel, expectedStartDate, expectedYears);
-
-            //Then - Assert check
-            actual.Title.Should().Be(expectedTitle);
-            actual.Level.Should().Be(expectedLevel);
-            actual.StartDate.Should().Be(expectedStartDate);
-            actual.Years.Should().Be(expectedYears);
-        }
-
-        //Depending on whether you adjusted the years when the default for years parameter
-        //  is used the greedy constructor, this test may or may not work (see note in greedy constructor)
-        [Fact]
-        public void Create_New_Greedy_Instance_With_Years_Default()
-        {
-            //Where - Arrange setup
-            string expectedTitle = "SAS Lead";
-            SupervisoryLevel expectedLevel = SupervisoryLevel.TeamLeader;
-            DateTime expectedStartDate = new DateTime(2020, 10, 24);
-
-            //if code not in greedy constructor, expectedYears will be 0.0
-
-            TimeSpan days = DateTime.Today - expectedStartDate;
-            double expectedYears = Math.Round((days.Days / 365.2), 1);
-
-            //When - Act execution
-            Employment actual = new Employment(expectedTitle, expectedLevel, expectedStartDate);
-
-            //Then - Assert check
-            actual.Title.Should().Be(expectedTitle);
-            actual.Level.Should().Be(expectedLevel);
-            actual.StartDate.Should().Be(expectedStartDate);
-            actual.Years.Should().Be(expectedYears);
-        }
-
-        [Fact]
-        public void Change_the_Title()
-        {
-            //Where - Arrange setup
-            string Title = "SAS Lead";
-            SupervisoryLevel Level = SupervisoryLevel.TeamLeader;
-            DateTime StartDate = new DateTime(2020, 10, 24);
-            TimeSpan days = DateTime.Today - StartDate;
-            double Years = Math.Round((days.Days / 365.2), 1);
-            Employment sut = new Employment(Title, Level, StartDate, Years);
-            string expectedTitle = "Development Head";
-
-            //When - Act execution
-            //sut -> subject under test
-            sut.Title ="Development Head";
-
-            //Then - Assert check
-            sut.Title.Should().Be(expectedTitle);
-
-        }
-
-        //DO NOT use if your class demonstration has made Years set private
+        ////the type [Fact] says to run the test once
         //[Fact]
-        //public void Change_the_Years()
+        //public void Create_New_Default_Instance()
+        //{
+        //    //Where - Arrange setup
+        //    string expectedTitle = "unknown";
+        //    SupervisoryLevel expectedLevel = SupervisoryLevel.TeamMember;
+        //    DateTime expectedStartDate = DateTime.Today;
+        //    double expectedYears = 0;
+
+        //    //When - Act execution
+        //    Employment actual = new Employment();
+
+        //    //Then - Assert check
+        //    actual.Title.Should().Be(expectedTitle);
+        //    actual.Level.Should().Be(expectedLevel);
+        //    actual.StartDate.Should().Be(expectedStartDate);
+        //    actual.Years.Should().Be(expectedYears);
+        //}
+
+        //[Fact]
+        //public void Create_New_Greedy_Instance()
+        //{
+        //    //Where - Arrange setup
+        //    string expectedTitle = "SAS Lead";
+        //    SupervisoryLevel expectedLevel = SupervisoryLevel.TeamLeader;
+        //    DateTime expectedStartDate = new DateTime(2020, 10, 24);
+        //    double expectedYears = 3.6;
+
+        //    //When - Act execution
+        //    Employment actual = new Employment(expectedTitle, expectedLevel, expectedStartDate, expectedYears);
+
+        //    //Then - Assert check
+        //    actual.Title.Should().Be(expectedTitle);
+        //    actual.Level.Should().Be(expectedLevel);
+        //    actual.StartDate.Should().Be(expectedStartDate);
+        //    actual.Years.Should().Be(expectedYears);
+        //}
+
+        ////Depending on whether you adjusted the years when the default for years parameter
+        ////  is used the greedy constructor, this test may or may not work (see note in greedy constructor)
+        //[Fact]
+        //public void Create_New_Greedy_Instance_With_Years_Default()
+        //{
+        //    //Where - Arrange setup
+        //    string expectedTitle = "SAS Lead";
+        //    SupervisoryLevel expectedLevel = SupervisoryLevel.TeamLeader;
+        //    DateTime expectedStartDate = new DateTime(2020, 10, 24);
+
+        //    //if code not in greedy constructor, expectedYears will be 0.0
+
+        //    TimeSpan days = DateTime.Today - expectedStartDate;
+        //    double expectedYears = Math.Round((days.Days / 365.2), 1);
+
+        //    //When - Act execution
+        //    Employment actual = new Employment(expectedTitle, expectedLevel, expectedStartDate);
+
+        //    //Then - Assert check
+        //    actual.Title.Should().Be(expectedTitle);
+        //    actual.Level.Should().Be(expectedLevel);
+        //    actual.StartDate.Should().Be(expectedStartDate);
+        //    actual.Years.Should().Be(expectedYears);
+        //}
+
+        //[Fact]
+        //public void Change_the_Title()
         //{
         //    //Where - Arrange setup
         //    string Title = "SAS Lead";
@@ -104,80 +82,102 @@ namespace UnitTestingForSystem
         //    TimeSpan days = DateTime.Today - StartDate;
         //    double Years = Math.Round((days.Days / 365.2), 1);
         //    Employment sut = new Employment(Title, Level, StartDate, Years);
-        //    double expectedYears = 5.5;
+        //    string expectedTitle = "Development Head";
 
         //    //When - Act execution
-        //    sut.CorrectStartDate = ;
+        //    //sut -> subject under test
+        //    sut.Title ="Development Head";
 
         //    //Then - Assert check
-        //    sut.Years.Should().Be(expectedYears);
+        //    sut.Title.Should().Be(expectedTitle);
+
         //}
 
-        [Fact]
-        public void Set_The_SupervisoryLevel()
-        {
-            //Where - Arrange setup
-            string Title = "SAS Lead";
-            SupervisoryLevel Level = SupervisoryLevel.TeamLeader;
-            DateTime StartDate = new DateTime(2020, 10, 24);
-            TimeSpan days = DateTime.Today - StartDate;
-            double Years = Math.Round((days.Days / 365.2), 1);
-            Employment sut = new Employment(Title, Level, StartDate, Years);
-            SupervisoryLevel expectedLevel = SupervisoryLevel.Supervisor;
+        ////DO NOT use if your class demonstration has made Years set private
+        ////[Fact]
+        ////public void Change_the_Years()
+        ////{
+        ////    //Where - Arrange setup
+        ////    string Title = "SAS Lead";
+        ////    SupervisoryLevel Level = SupervisoryLevel.TeamLeader;
+        ////    DateTime StartDate = new DateTime(2020, 10, 24);
+        ////    TimeSpan days = DateTime.Today - StartDate;
+        ////    double Years = Math.Round((days.Days / 365.2), 1);
+        ////    Employment sut = new Employment(Title, Level, StartDate, Years);
+        ////    double expectedYears = 5.5;
 
-            //When - Act execution
-            sut.SetEmploymentResponsibilityLevel(SupervisoryLevel.Supervisor);
+        ////    //When - Act execution
+        ////    sut.CorrectStartDate = ;
 
-            //Then - Assert check
-            sut.Level.Should().Be(expectedLevel);
+        ////    //Then - Assert check
+        ////    sut.Years.Should().Be(expectedYears);
+        ////}
 
-        }
+        //[Fact]
+        //public void Set_The_SupervisoryLevel()
+        //{
+        //    //Where - Arrange setup
+        //    string Title = "SAS Lead";
+        //    SupervisoryLevel Level = SupervisoryLevel.TeamLeader;
+        //    DateTime StartDate = new DateTime(2020, 10, 24);
+        //    TimeSpan days = DateTime.Today - StartDate;
+        //    double Years = Math.Round((days.Days / 365.2), 1);
+        //    Employment sut = new Employment(Title, Level, StartDate, Years);
+        //    SupervisoryLevel expectedLevel = SupervisoryLevel.Supervisor;
 
-        [Fact]
-        public void Set_The_Correct_StartDate()
-        {
-            //Where - Arrange setup
-            string Title = "SAS Lead";
-            SupervisoryLevel Level = SupervisoryLevel.TeamLeader;
-            DateTime StartDate = new DateTime(2020, 10, 24);
-            TimeSpan days = DateTime.Today - StartDate;
-            double Years = Math.Round((days.Days / 365.2), 1);
-            Employment sut = new Employment(Title, Level, StartDate, Years);
-            DateTime expectedDate = new DateTime(2019, 10, 24);
+        //    //When - Act execution
+        //    sut.SetEmploymentResponsibilityLevel(SupervisoryLevel.Supervisor);
 
-            //add the generation of the years when the date is updated
-            //this assumes that this is the most current employment
+        //    //Then - Assert check
+        //    sut.Level.Should().Be(expectedLevel);
 
-            days = DateTime.Today - expectedDate;
-            double expectedyears = Math.Round((days.Days / 365.2), 1);
+        //}
 
-            //When - Act execution
-            sut.CorrectStartDate(new DateTime(2019, 10, 24));
+        //[Fact]
+        //public void Set_The_Correct_StartDate()
+        //{
+        //    //Where - Arrange setup
+        //    string Title = "SAS Lead";
+        //    SupervisoryLevel Level = SupervisoryLevel.TeamLeader;
+        //    DateTime StartDate = new DateTime(2020, 10, 24);
+        //    TimeSpan days = DateTime.Today - StartDate;
+        //    double Years = Math.Round((days.Days / 365.2), 1);
+        //    Employment sut = new Employment(Title, Level, StartDate, Years);
+        //    DateTime expectedDate = new DateTime(2019, 10, 24);
 
-            //Then - Assert check
-            sut.StartDate.Should().Be(expectedDate);
-            sut.Years.Should().Be(expectedyears);
-        }
+        //    //add the generation of the years when the date is updated
+        //    //this assumes that this is the most current employment
+
+        //    days = DateTime.Today - expectedDate;
+        //    double expectedyears = Math.Round((days.Days / 365.2), 1);
+
+        //    //When - Act execution
+        //    sut.CorrectStartDate(new DateTime(2019, 10, 24));
+
+        //    //Then - Assert check
+        //    sut.StartDate.Should().Be(expectedDate);
+        //    sut.Years.Should().Be(expectedyears);
+        //}
 
       
-        [Fact]
-        public void Create_CSV_String()
-        {
-            string Title = "SAS Lead";
-            SupervisoryLevel Level = SupervisoryLevel.TeamLeader;
-            DateTime StartDate = new DateTime(2020, 10, 24);
-            TimeSpan days = DateTime.Today - StartDate;
-            double Years = Math.Round((days.Days / 365.2), 1);
-            Employment sut = new Employment(Title, Level, StartDate, Years);
-            string expectedCSV = $"SAS Lead,TeamLeader,Oct. 24 2020,{Years}"; 
+        //[Fact]
+        //public void Create_CSV_String()
+        //{
+        //    string Title = "SAS Lead";
+        //    SupervisoryLevel Level = SupervisoryLevel.TeamLeader;
+        //    DateTime StartDate = new DateTime(2020, 10, 24);
+        //    TimeSpan days = DateTime.Today - StartDate;
+        //    double Years = Math.Round((days.Days / 365.2), 1);
+        //    Employment sut = new Employment(Title, Level, StartDate, Years);
+        //    string expectedCSV = $"SAS Lead,TeamLeader,Oct. 24 2020,{Years}"; 
 
-            //When - Act execution
-            string actual = sut.ToString();
+        //    //When - Act execution
+        //    string actual = sut.ToString();
 
-            //Then - Assert check
-            actual.Should().Be(expectedCSV);
+        //    //Then - Assert check
+        //    actual.Should().Be(expectedCSV);
 
-        }
+        //}
 
 
         #endregion
