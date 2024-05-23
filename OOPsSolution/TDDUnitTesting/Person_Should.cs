@@ -146,10 +146,48 @@ namespace TDDUnitTesting
         #endregion
 
         #region Properties
+        [Fact]
         public void Change_FirstName_Directly()
         {
+            //Arrange (setup)
+            string expectedFirstName = "Lowand";
+            string expectedLastName = "Behold";
+            ResidentAddress expectedAdress = new ResidentAddress(12, "Maple St.",
+                                    "Edmonton", "AB", "T6Y7U8");
+            Person sut = new Person(expectedFirstName, expectedLastName,
+                        expectedAdress, null);
 
+            //Act (the test action)
+            //sut subject under test
+            sut.FirstName = "Bob";
+
+            //Assert (checking)
+            sut.FirstName.Should().Be("Bob");
+           
+            
         }
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("    ")]
+        public void Throw_Exception_Changing_FirstName_Missing_FirstName(string firstname)
+        {
+            //Arrange (setup)
+            string expectedFirstName = "Lowand";
+            string expectedLastName = "Behold";
+            ResidentAddress expectedAdress = new ResidentAddress(12, "Maple St.",
+                                    "Edmonton", "AB", "T6Y7U8");
+            Person sut = new Person(expectedFirstName, expectedLastName,
+                       expectedAdress, null);
+
+            //Act (the test action)
+            //capture the result of the action call
+            Action action = () => sut.FirstName = firstname;
+
+            //Assert (checking)
+            action.Should().Throw<ArgumentNullException>();
+        }
+
         #endregion
     }
 }

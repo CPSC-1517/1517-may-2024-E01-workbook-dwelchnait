@@ -8,7 +8,19 @@ namespace OOPsReview
 {
     public class Person
     {
-        public string FirstName { get; set; }
+        private string _FirstName;
+        public string FirstName 
+        { 
+            get { return _FirstName; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentNullException("First name is required");
+                }
+                _FirstName = value.Trim();
+            }
+        }
         public string LastName { get; set; }
         public ResidentAddress Address { get; set; }
 
@@ -26,10 +38,11 @@ namespace OOPsReview
         public Person(string firstname, string lastname,
                         ResidentAddress address, List<Employment> employmentpositions)
         {
-            if (string.IsNullOrWhiteSpace(firstname))
-            {
-                throw new ArgumentNullException("First name is required");
-            }
+            //refactor this code once further class development has been done
+            //if (string.IsNullOrWhiteSpace(firstname))
+            //{
+            //    throw new ArgumentNullException("First name is required");
+            //}
             if (string.IsNullOrWhiteSpace(lastname))
             {
                 throw new ArgumentNullException("Last name is required");
