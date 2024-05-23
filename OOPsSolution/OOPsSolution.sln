@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OOPsReview", "OOPsReview\OOPsReview.csproj", "{6A86F603-6A53-40AE-8323-CED11325B8F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnirTestinForSystem", "UnirTestinForSystem\UnirTestinForSystem.csproj", "{620FB3C3-08C3-4101-A2B4-313A115C43C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnirTestinForSystem", "UnirTestinForSystem\UnirTestinForSystem.csproj", "{620FB3C3-08C3-4101-A2B4-313A115C43C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDDUnitTesting", "TDDUnitTesting\TDDUnitTesting.csproj", "{AEB51483-B79D-4998-855C-9B2B4FB01A8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{620FB3C3-08C3-4101-A2B4-313A115C43C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{620FB3C3-08C3-4101-A2B4-313A115C43C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{620FB3C3-08C3-4101-A2B4-313A115C43C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEB51483-B79D-4998-855C-9B2B4FB01A8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEB51483-B79D-4998-855C-9B2B4FB01A8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEB51483-B79D-4998-855C-9B2B4FB01A8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEB51483-B79D-4998-855C-9B2B4FB01A8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
