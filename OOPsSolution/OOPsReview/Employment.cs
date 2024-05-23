@@ -186,7 +186,8 @@ namespace OOPsReview
             //this will demonstrate a missed requirement caught by a unit test
             //add the generation of the years when the default values exists
             //this was discovered by the failure of the unit test for the constructor
-            if (years < 0)
+           // if (years < 0)
+            if (!Utilities.IsPositive(years))
             {
                 throw new ArgumentOutOfRangeException($"Year value of {years} is invalid. Cannot be negative");
             }

@@ -35,5 +35,9 @@ namespace OOPsReview
             //    return true;
             //}
         }
+
+        public static bool IsPositive(int value) => value >= 0;
+
+        public static bool IsPositive(decimal value) => value >= 0.0m;
     }
 }
