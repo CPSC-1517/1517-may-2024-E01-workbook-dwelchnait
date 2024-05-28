@@ -188,6 +188,188 @@ namespace TDDUnitTesting
             action.Should().Throw<ArgumentNullException>();
         }
 
+        [Fact]
+        public void Change_LastName_Directly()
+        {
+            //Arrange (setup)
+            string expectedFirstName = "Lowand";
+            string expectedLastName = "Behold";
+            ResidentAddress expectedAdress = new ResidentAddress(12, "Maple St.",
+                                    "Edmonton", "AB", "T6Y7U8");
+            Person sut = new Person(expectedFirstName, expectedLastName,
+                        expectedAdress, null);
+
+            //Act (the test action)
+            //sut subject under test
+            sut.LastName = "Bob";
+
+            //Assert (checking)
+            sut.LastName.Should().Be("Bob");
+
+
+        }
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("    ")]
+        public void Throw_Exception_Changing_LastName_Missing_LastName(string lastname)
+        {
+            //Arrange (setup)
+            string expectedFirstName = "Lowand";
+            string expectedLastName = "Behold";
+            ResidentAddress expectedAdress = new ResidentAddress(12, "Maple St.",
+                                    "Edmonton", "AB", "T6Y7U8");
+            Person sut = new Person(expectedFirstName, expectedLastName,
+                       expectedAdress, null);
+
+            //Act (the test action)
+            //capture the result of the action call
+            Action action = () => sut.LastName = lastname;
+
+            //Assert (checking)
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        #endregion
+
+        #region Methods
+        [Fact]
+        public void Change_Full_Name()
+        {
+            //Arrange (setup)
+            string expectedFirstName = "Lowand";
+            string expectedLastName = "Behold";
+            ResidentAddress expectedAdress = new ResidentAddress(12, "Maple St.",
+                                    "Edmonton", "AB", "T6Y7U8");
+            Person sut = new Person(expectedFirstName, expectedLastName,
+                        expectedAdress, null);
+
+            //Act (the test action)
+            //sut subject under test
+            sut.ChangeFullName("Shirley","Ujest");
+
+            //Assert (checking)
+            sut.FullName.Should().Be("Ujest, Shirley");
+        }
+        [Theory]
+        [InlineData(null,"Ujest")]
+        [InlineData("", "Ujest")]
+        [InlineData("    ", "Ujest")]
+        [InlineData("Shirley",null)]
+        [InlineData("Shirley", "")]
+        [InlineData("Shirley", "    ")]
+        public void Throw_Exception_Changing_Full_Name_Missing_A_Name_Value(string firstname, string lastname)
+        {
+            //Arrange (setup)
+            string expectedFirstName = "Lowand";
+            string expectedLastName = "Behold";
+            ResidentAddress expectedAdress = new ResidentAddress(12, "Maple St.",
+                                    "Edmonton", "AB", "T6Y7U8");
+            Person sut = new Person(expectedFirstName, expectedLastName,
+                       expectedAdress, null);
+
+            //Act (the test action)
+            //capture the result of the action call
+            Action action = () => sut.ChangeFullName(firstname, lastname); 
+
+            //Assert (checking)
+            action.Should().Throw<ArgumentNullException>();
+        }
+        [Fact]
+        public void Add_First_New_Employment_Instance_To_Person()
+        {
+            //Arrange (setup)
+            string expectedFirstName = "Lowand";
+            string expectedLastName = "Behold";
+            ResidentAddress expectedAdress = new ResidentAddress(12, "Maple St.",
+                                    "Edmonton", "AB", "T6Y7U8");
+            Person sut = new Person(expectedFirstName, expectedLastName,
+                        expectedAdress, null);
+
+            //need an instance of Employment
+            Employment newEmployment = new Employment("Boss", SupervisoryLevel.DepartmentHead,
+                                            DateTime.Parse("2020/03/15"));
+
+            //Act (the test action)
+            //sut subject under test
+            sut.AddEmployment(newEmployment);
+
+            //Assert (checking)
+            sut.EmploymentPositions.Should().NotBeEmpty();
+            sut.EmploymentPositions.Count().Should().Be(1);
+            sut.EmploymentPositions[0].Should().BeSameAs(newEmployment);
+        }
+
+        [Fact]
+        public void Throw_ArgumentNullException_On_Add_Employment_With_No_Argument_Value()
+        {
+            //Arrange (setup)
+            string expectedFirstName = "Lowand";
+            string expectedLastName = "Behold";
+            ResidentAddress expectedAdress = new ResidentAddress(12, "Maple St.",
+                                    "Edmonton", "AB", "T6Y7U8");
+            Person sut = new Person(expectedFirstName, expectedLastName,
+                        expectedAdress, null);
+
+
+            //Act (the test action)
+            //capture the result of the action call
+            Action action = () => sut.AddEmployment(null);
+
+            //Assert (checking)
+            action.Should().Throw<ArgumentNullException>();
+        }
+        [Fact]
+        public void Add_Another_Employment_To_History_Of_Positions()
+        {
+            //Arrange (setup)
+            string expectedFirstName = "Lowand";
+            string expectedLastName = "Behold";
+            ResidentAddress expectedAdress = new ResidentAddress(12, "Maple St.",
+                                    "Edmonton", "AB", "T6Y7U8");
+
+            //create a collection to have on our person employment history
+            //we will add another employment to this history
+            //build individual instances and save to separate variables
+            //NOTE: each instance not only has it data, it also has a GUID value
+            //When we do checks we need to maintain this GUID value
+            Employment emp1 = new Employment("PC II", SupervisoryLevel.TeamMember,
+                                DateTime.Parse("2013/03/16"), 3.5);
+            Employment emp2 = new Employment("PC III", SupervisoryLevel.TeamMember,
+                                DateTime.Parse("2016/09/16"), 1.5);
+            Employment emp3 = new Employment("TL I", SupervisoryLevel.TeamLeader,
+                                DateTime.Parse("2018/03/16"), 4.2);
+            List<Employment> startingPositions = new List<Employment>()
+            {
+                emp1, emp2, emp3
+            };
+            Person sut = new Person(expectedFirstName, expectedLastName,
+                        expectedAdress, startingPositions);
+
+            //need an instance of Employment
+            Employment newEmployment = new Employment("Boss", SupervisoryLevel.DepartmentHead,
+                                            DateTime.Parse("2022/05/15"));
+
+            //if one needs to compare list A to list B, you need to create list B
+            //using the initial instances of your collection
+            List<Employment> expectedEmploymentPositions = new List<Employment>()
+            {
+                emp1, emp2, emp3, newEmployment
+            };
+
+            //Act (the test action)
+            //sut subject under test
+            sut.AddEmployment(newEmployment);
+
+            //Assert (checking)
+            sut.EmploymentPositions.Should().NotBeEmpty();
+            sut.EmploymentPositions.Count().Should().Be(4);
+            sut.EmploymentPositions[3].Should().BeSameAs(newEmployment);
+
+            //check the contents of a collection to be IDENTICAL to another collection
+            //compare two separate phyiscal copies of the data together
+            sut.EmploymentPositions.Should().ContainInConsecutiveOrder(expectedEmploymentPositions);
+        }
         #endregion
     }
 }

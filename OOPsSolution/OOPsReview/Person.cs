@@ -9,6 +9,8 @@ namespace OOPsReview
     public class Person
     {
         private string _FirstName;
+        private string _LastName;
+
         public string FirstName 
         { 
             get { return _FirstName; }
@@ -21,12 +23,28 @@ namespace OOPsReview
                 _FirstName = value.Trim();
             }
         }
-        public string LastName { get; set; }
+        public string LastName 
+        {
+            get { return _LastName; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentNullException("Last name is required");
+                }
+                _LastName = value.Trim();
+            }
+        }
         public ResidentAddress Address { get; set; }
 
         public List<Employment> EmploymentPositions { get; set; }
 
-        public string FullName { get; }
+        //public string FullName 
+        //{
+        //    get { return $"{LastName}, {FirstName}"; } 
+        //}
+
+        public string FullName => $"{LastName}, {FirstName}";
 
         public Person()
         {
@@ -58,6 +76,21 @@ namespace OOPsReview
             {
                 EmploymentPositions = employmentpositions;
             }
+        }
+
+        public void ChangeFullName(string firstname, string lastname)
+        {
+            FirstName = firstname;
+            LastName = lastname;
+        }
+
+        public void AddEmployment(Employment employment)
+        {
+            if (employment == null)
+            {
+                throw new ArgumentNullException("Missing employment record. Unable to complete action.");
+            }
+            EmploymentPositions.Add(employment);
         }
     }
 }
