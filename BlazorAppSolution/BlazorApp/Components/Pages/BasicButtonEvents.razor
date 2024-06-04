@@ -1,0 +1,80 @@
+﻿@page "/basicevents"
+<!-- 
+    the page directive MUST be the first PHYSICAL line in the file
+    it has a routing identifier string used by the menu item to identify 
+        which component to use on the web page
+    it is not case-sensitive, BUT spelling is important
+-->
+
+<!-- 
+    the PageTitle allows the developer to place text on the browser window tab
+-->
+<PageTitle>Basic Events</PageTitle>
+
+<!-- 
+    The next line was introduced in .Net 8 core
+    This line inidcates the interactivity of the rendering mode
+    We need it to make the buttons work on the page
+-->
+@rendermode InteractiveServer
+
+<h3>Basic Button Events</h3>
+<h5 style="color:blue;font-style:italic;">Learning about buttons and events</h5>
+
+<blockquote style="background-color:aquamarine;">
+    This page will demonstrate the basics of button events.
+    It will use a &lt;input&gt; control to ask for some user input.
+    It will use a &lt;button&gt; control to process the input.
+    It will demonstrate basic use of C# code to do the processing.
+</blockquote>
+
+<!--
+    the data from an input control needs to be physical move to a variable within the
+        coding block
+    this is accomplished by tying the control to the variable using the attribute parameter
+        bind (also could use bindvalue)
+-->
+<label for="dataitem">
+    <input type="text" placeholder="enter a string" id="dataitem"
+        @bind="inputValue"/>
+</label>
+<br/><br/>
+
+<!-- 
+    to get the button linked to code to process when the button is pressed use the
+         button attribute parameter: onclick
+    the value you assign to the parameter is the C# method name that will do the processing
+-->
+<button type="submit" id="forjavascript" name="csharpidentifier"
+        value="datavalueforbutton"
+        class="btn btn-outline-primary"
+        @onclick="OnClickMethodName">
+        Press me
+</button>
+
+@code {
+        /*
+        * this is a csharp coding block
+        * the code within this area is C#
+        * 
+        * How does the system know that this is C# code?
+        * Notice the  directive @code
+    */
+
+    /*
+    * variable tied to a control are created within the coding block
+    * data is automatically move between the control and the variable
+    */
+    private string inputValue = "";
+    private string feedback = "";
+
+    /*
+    * methods to process button events are coded within this coding block
+    * the method is tied to the button via the methodname and the button onclick parameter
+     */
+
+    private void OnClickMethodName()
+    {
+        feedback = $"You entered the value of {inputValue}";
+    }
+}
