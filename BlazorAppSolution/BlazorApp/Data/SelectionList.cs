@@ -1,4 +1,4 @@
-﻿namespace BlazorWebApp.Data
+﻿namespace BlazorApp.Data
 {
     public class SelectionList
     {
