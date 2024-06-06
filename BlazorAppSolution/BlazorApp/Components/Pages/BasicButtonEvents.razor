@@ -27,7 +27,9 @@
     It will use a &lt;button&gt; control to process the input.
     It will demonstrate basic use of C# code to do the processing.
 </blockquote>
-
+<br/>
+<p>@WelcomeMsg</p>
+<br/><br/>
 <!--
     the data from an input control needs to be physical move to a variable within the
         coding block
@@ -51,6 +53,28 @@
         @onclick="OnClickMethodName">
         Press me
 </button>
+&nbsp;&nbsp;&nbsp;
+<button type="submit" 
+        class="btn btn-outline-success rounded-pill"
+        @onclick="HeadsOrTails">
+    Heads Or Tails
+</button>
+&nbsp;&nbsp;&nbsp;
+<button type="submit"
+        
+        @onclick="Clear">
+    Clear
+</button>
+<!-- to obtain data localed within your C# variables you need to leave the HTML universe
+     and enter the C# universe. 
+     to do this use the "at" symbol to move between the two universes
+     once in the C# uninverse you can use C# coding
+-->
+@if (!string.IsNullOrWhiteSpace(feedback))
+{
+    //as soon as I use the first html code I return to the html universe from C#
+    <p>@feedback</p>
+}
 
 @code {
         /*
@@ -67,6 +91,7 @@
     */
     private string inputValue = "";
     private string feedback = "";
+    private string WelcomeMsg = "";
 
     /*
     * methods to process button events are coded within this coding block
@@ -75,6 +100,39 @@
 
     private void OnClickMethodName()
     {
+        WelcomeMsg = "";
         feedback = $"You entered the value of {inputValue}";
+    }
+
+    private void HeadsOrTails()
+    {
+        WelcomeMsg = "";
+        Random rdn = new Random();
+        int flip = rdn.Next(1, 101);
+        if (flip % 2 == 0)
+        {
+            feedback = "Coin flip Heads";
+        }
+        else
+        {
+            feedback = "Coin flip Tails";
+        }
+    }
+    private void Clear()
+    {
+        WelcomeMsg = "";
+        feedback = "";
+        inputValue = null;
+    }
+
+    //there are special events already created for the blazor component
+    // on is the ability to execute code as the page is 1st created
+    // the OnInitialized() method, is executed when the page is 1st created
+    // it can be used to place special messages on the appearence of a page
+    //  or do initialized of variables on your page
+    protected override void OnInitialized()
+    {
+        WelcomeMsg = "Let us get started";
+        base.OnInitialized();
     }
 }

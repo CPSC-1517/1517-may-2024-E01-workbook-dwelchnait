@@ -1,0 +1,128 @@
+﻿<h3>Controls Radio CheckBox TextArea</h3>
+<label>
+    Select favourite meal<br />
+</label>
+<!-- hard coded version-->
+@*<div class="form-check">
+    <input class="form-check-input" type="radio" name="mealRadio" id="breakfast" value="Breakfast"
+           checked="@("Breakfast" == selectedMeal)" @onchange="() => SelectMeal('B')">
+    <label class="form-check-label" for="breakfast">
+        Breakfast
+    </label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="mealRadio" id="lunch" value="Lunch"
+           checked="@("Lunch" == selectedMeal)" @onchange="() => SelectMeal('L')">
+    <label class="form-check-label" for="lunch">
+        Lunch
+    </label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="mealRadio" id="dinner" value="Dinner"
+           checked="@("Dinner" == selectedMeal)" @onchange="() => SelectMeal('D')">
+    <label class="form-check-label" for="dinner">
+        Supper
+    </label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="mealRadio" id="snack" value="Snack"
+           checked="@("Snack" == selectedMeal)" @onchange="() => SelectMeal('S')">
+    <label class="form-check-label" for="snack">
+        Snack
+    </label>
+</div>*@
+
+<!-- collection version dynamic creation-->
+@foreach (var meal in mealOptions)
+{
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="mealRadio" id="@meal" value="@meal"
+               checked="@meal == selectedMeal" @onchange="() => SelectMeal(meal)">
+        <label class="form-check-label" for="@meal">
+            @meal
+        </label>
+    </div>
+}
+
+<br />
+
+<br />
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" id="exampleCheckbox" @bind="acceptanceBox">
+    <label class="form-check-label" for="exampleCheckbox">
+        I accept the terms.
+    </label>
+</div>
+<br />
+<label>
+    Message
+    <textarea rows="5" cols="60" placeholder="enter a message"
+              @bind="MessageBody">@MessageBody</textarea>
+</label>
+<br />
+<button type="submit" @onclick="RadioCheckArea">
+    Radio/Check/Area Submit
+</button>
+<br/>
+<br/>
+<p>@feedback</p>
+@code {
+    private List<string> mealOptions = new List<string> { "Breakfast", "Lunch", "Supper","Snack" };
+    private string selectedMeal;
+    private bool acceptanceBox = false;
+    private string MessageBody;
+    private string feedback;
+
+    // [Parameter] public string DataToSend { get; set; }
+    // //this is a bound event handler delegate
+    // [Parameter] public EventCallback<string> OnDataSent { get; set; }
+
+    //private void SelectMeal(char meal)
+    //{
+    //    switch (meal)
+    //    {
+    //        case 'B':
+    //            {
+    //                selectedMeal = "BreakFast";
+    //                break;
+    //            }
+    //        case 'L':
+    //            {
+    //                selectedMeal = "Lunch";
+    //                break;
+    //            }
+    //        case 'D':
+    //            {
+    //                selectedMeal = "Dinner";
+    //                break;
+    //            }
+    //        case 'S':
+    //            {
+    //                selectedMeal = "Snack";
+    //                break;
+    //            }
+    //    }
+        
+    //}
+
+    private void SelectMeal(string meal)
+    {
+        selectedMeal = meal;
+    }
+  
+
+    private void RadioCheckArea()
+    {
+        //feedback is filled then feedback fills DataToSend
+        feedback = $"Radio {selectedMeal} -- Terms {acceptanceBox} --  Message {MessageBody}";
+        //DataToSend = feedback ;
+
+        //evokes the EventCallback
+       // OnDataSent.InvokeAsync(DataToSend);
+    }
+
+
+}
