@@ -161,10 +161,21 @@
 
     public void Collect()
     {
-        
+
     }
     public void Clear()
     {
+        employmentTitle = "";
+        startDate = DateTime.Today;
+        empYears = 0;
+        supervisoryLevel = SupervisoryLevel.Entry;
+        feedback = ""; //clear out any old message
+        errormsgs.Clear(); //clear out all existing keys and their values
 
+    }
+    protected override void OnInitialized()
+    {
+        startDate = DateTime.Today;
+        base.OnInitialized();
     }
 }
