@@ -121,7 +121,7 @@
         </div>
     </div>
 
-    <!-- place a row of buttons for the events-->
+    <!-- place a row of buttons for the events -->
     <br/><br/>
     <div class="row">
         <div class="col-md-12 text-center">
@@ -161,7 +161,43 @@
 
     public void Collect()
     {
+        feedback = ""; //clear out any old message
+        errormsgs.Clear(); //clear out all existing keys and their values
 
+        //primitive valdiation
+        //  presence
+        //  datatype
+        //  range of values
+
+        //Business Rules
+        //Title must be presence, must have at least one character
+        //start date cannot be in the future
+        //years cannot be less than zero
+
+        if(string.IsNullOrWhiteSpace(employmentTitle))
+        {
+            //if there is a violation of the rule
+            //we wish to collect the eror and display to the user
+            //we are using a Dictionary in this example that has two components
+            //  a) a unquie value that is treat as a key
+            //  b) a string which represents the value associated with the key
+            errormsgs.Add("Title", "Title is required");
+        }
+
+        if( startDate >= DateTime.Today.AddDays(1))
+        {
+            errormsgs.Add("StartDate", "Start Date is in the future. Must be today or in the past.");
+        }
+
+        if(empYears < 0)
+        {
+            errormsgs.Add("Years", "Years must be 0 or greater (1/4 years allowed, eg 3.75).");
+        }
+
+        if (errormsgs.Count == 0)
+        {
+            feedback = "data is good for further processing";
+        }
     }
     public void Clear()
     {
