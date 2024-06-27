@@ -5,6 +5,12 @@
 <!-- this using is the name space of the Employment class and SupervisoryLevel enum-->
 @using OOPsReview; 
 
+@*
+    this injection statement brings in a javascript runtime set of services
+    this injection could also be done in your code block using the annotation (below)
+*@
+@inject IJSRuntime JSRunTime
+
 <h3>Data Entry Sample</h3>
 
 <div class="row">
@@ -136,7 +142,18 @@
                     @onclick="Clear">
                 Clear
             </button>
-            
+            &nbsp;&nbsp;
+            <button type="submit"
+                    class="btn btn-outline-secondary rounded-pill"
+                    @onclick="GoToReport">
+                Report via method
+            </button>
+            &nbsp;&nbsp;
+            <button type="submit"
+                    class="btn btn-outline-secondary rounded-pill">
+                <a href="employmentreport">Report via anchor</a>
+                
+            </button>
         </div>
     </div>
 
@@ -166,6 +183,10 @@
     //  for use to your application
     [Inject]
     public IWebHostEnvironment webHostEnvironment { get; set; } = default;
+
+    //this injection is to obtain the navigation manager component
+    [Inject]
+    private NavigationManager _navManager { get; set; }
 
     public void Collect()
     {
@@ -204,7 +225,7 @@
 
         if (errormsgs.Count == 0)
         {
-           
+
             //at this point in the collection, the data is "deemed" acceptable
             //
             //if you are using a class to collection and hold your data
@@ -278,14 +299,42 @@
             }
         }
     }
-    public void Clear()
+    //not using a JSRunTime services
+    // public void Clear()
+    // {
+    //     employmentTitle = "";
+    //     startDate = DateTime.Today;
+    //     empYears = 0;
+    //     supervisoryLevel = SupervisoryLevel.Entry;
+    //     feedback = ""; //clear out any old message
+    //     errormsgs.Clear(); //clear out all existing keys and their values
+
+    // }
+
+    //using the JSRunTime service
+    //the setup of the method now is an async Task
+    public async Task Clear()
     {
-        employmentTitle = "";
-        startDate = DateTime.Today;
-        empYears = 0;
-        supervisoryLevel = SupervisoryLevel.Entry;
+
         feedback = ""; //clear out any old message
         errormsgs.Clear(); //clear out all existing keys and their values
+
+
+        //WARNING: remember to insert your Injection of IJSRunTime
+
+        //issue a prompt dialogue to the user to obtain confirmation of the action
+        //create your message for the dialogue box into an generic object
+        object[] messageline = new object[] { "Clearing will lose all unsaved data. Are you sure you want to clear the form?" };
+        if (await JSRunTime.InvokeAsync<bool>("confirm", messageline))
+        {
+            //the INvokeAsync will cause a dialogue box to appear with my message line
+            //this component code is to wait until the dialogue sends a value back
+            //the returning value will be a true or false
+            employmentTitle = "";
+            startDate = DateTime.Today;
+            empYears = 0;
+            supervisoryLevel = SupervisoryLevel.Entry;
+        }
 
     }
     protected override void OnInitialized()
@@ -301,5 +350,13 @@
         while (ex.InnerException != null)
             ex = ex.InnerException;
         return ex;
+    }
+
+    private void GoToReport()
+    {
+        //this event will use the Navigate services of the seb software
+        //the Navigate services must be injected into the page
+        //the location you are going to is reference by the page's routing name
+        _navManager.NavigateTo("employmentreport");
     }
 }
