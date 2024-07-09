@@ -38,5 +38,15 @@ namespace WestWindSystem.BLL
             //convert from an IEnumerable<T> collection to a List<T> collection
             return info.OrderBy(r => r.RegionDescription).ToList();
         }
+
+        public Region Regions_GetById(int regionid)
+        {
+            //using Linq .Where() method to filter the data from the sql table
+            //  such as it matches the Where condition
+            IEnumerable<Region> info = _context.Regions
+                                        .Where(r => r.RegionID == regionid);
+            //here the result by matching the pkey (primary key) will be a single record
+            return info.FirstOrDefault();
+        }
     }
 }
