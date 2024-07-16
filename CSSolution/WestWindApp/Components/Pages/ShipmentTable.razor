@@ -1,0 +1,70 @@
+﻿@page "/tablequery"
+<PageTitle>Table Query</PageTitle>
+@rendermode InteractiveServer
+@using WestWindSystem.BLL;
+@using WestWindSystem.Entities;
+
+<h3>Shipment Table</h3>
+
+<!-- area to feedback messages-->
+@if (feedback.Length > 0)
+{
+    <div class="alert alert-info">
+        <p>@feedback</p>
+    </div>
+}
+<!-- area to error messages-->
+@if (errors.Count > 0)
+{
+    <div class="alert alert-danger">
+        <p>Please fix the following issues:</p>
+        <ul>
+            @foreach (var error in errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+<br /><br />
+<div class="row">
+    <div class="col-md-3">
+        <p><strong>Input of query values</strong></p>
+        <label for="year">Enter shipment year:</label> &nbsp;&nbsp;
+        <input id="year" type="number" @bind="yeararg"
+               style="width:75px" />
+        <br />
+        <label for="month">Enter shipment month:</label> &nbsp;&nbsp;
+        <input id="month" type="number" @bind="montharg"
+               style="width:75px" />
+        <br />
+        <button type="submit" @onclick="GetByYearAndMonth">Fetch Shipments</button>
+    </div>
+    <div class="col-md-9">
+        <p><strong>Display result of query</strong></p>
+        @if (datainfo.Count > 0)
+        {
+           
+        }
+        else
+        {
+            <p> No data found for requested query</p>
+        }
+
+    </div>
+</div>
+
+@code {
+    private string feedback = "";
+    private List<string> errors = new List<string>();
+
+    private int yeararg;
+    private int montharg;
+
+    private List<Shipment> datainfo = new List<Shipment>();
+
+    private void GetByYearAndMonth()
+    {
+
+    }
+}
