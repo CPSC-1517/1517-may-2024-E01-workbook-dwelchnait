@@ -1,0 +1,124 @@
+﻿@page "/simplequeries"
+<PageTitle>Simple Queries</PageTitle>
+@rendermode InteractiveServer
+@using WestWindSystem.BLL;
+@using WestWindSystem.Entities;
+
+<h3>Region Queries</h3>
+<h5>exploring simple queries</h5>
+<br/><br/>
+<!-- area to feedback messages-->
+@if (feedback.Length > 0)
+{
+    <div class="alert alert-info">
+        <p>@feedback</p>
+    </div>
+}
+<!-- area to error messages-->
+@if (errors.Count > 0)
+{
+    <div class="alert alert-danger">
+        <p>Please fix the following issues:</p>
+        <ul>
+            @foreach (var error in errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+
+<!-- form -->
+<div class="row">
+    <div class="col-md-6">
+        <p><strong>Input of query values</strong></p>
+        <label for="regionid">Enter a regionid:</label> &nbsp;&nbsp;
+        <input id="regionid" type="number" @bind="regionidarg"
+               style="width:75px" />&nbsp;&nbsp;
+        <button type="submit" @onclick="GetById">Fetch by Key</button>
+        <br /><br/>
+        <label for="regionlist">Select a region:</label> &nbsp;&nbsp;
+        <select @bind="regionselectarg" style="width:150px">
+            <option value="0">select ....</option>
+            @foreach(var item in regionlist)
+            {
+                <option value="@item.RegionID">@item.RegionDescription</option>
+            }
+        </select>
+        &nbsp;&nbsp;
+        <button type="submit" @onclick="GetBySelection">Fetch by Selection</button>
+    </div>
+    <div class="col-md-6">
+        <p><strong>Display result of query</strong></p>
+        @if(datainfo != null)
+        {
+            <p>Region Id; @datainfo.RegionID</p>
+            <p>Description: @datainfo.RegionDescription</p>
+        }
+        else
+        {
+            <p> No data found for requested query</p>
+        }
+
+    </div>
+</div>
+@code {
+    private string feedback = "";
+    private List<string> errors = new List<string>();
+
+    //field variables
+    private int regionidarg;
+    private int regionselectarg;
+    private List<Region> regionlist = new List<Region>();
+    private Region datainfo;
+
+    [Inject]
+    public RegionServices _regionServices { get; set; }
+
+    private void GetById()
+    {
+        //clear out any old messages
+        feedback = "";
+        errors.Clear();
+        datainfo = null; //clear out old query output
+
+        //validation incoming value 
+        if (regionidarg <= 0) //looking up a Region record on the database by primary key (pkey)
+        {
+            errors.Add("Region id must be a number greater than 0");
+        }
+        else
+        {
+            //issue a request to execute a query within the BLL class RegionServices
+            datainfo = _regionServices.Regions_GetById(regionidarg);
+        }
+
+    }
+    private void GetBySelection()
+    {
+        //clear out any old messages
+        feedback = "";
+        errors.Clear();
+        datainfo = null; //clear out old query output
+
+        //validation incoming value
+        if (regionselectarg == 0) //looking up a Region record on the database by primary key (pkey)
+        {
+            errors.Add("Select a region to query");
+        }
+        else
+        {
+            //issue a request to execute a query within the BLL class RegionServices
+            datainfo = _regionServices.Regions_GetById(regionselectarg);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        //obtain a list of regions
+        //call the method in the BLL class RegionServices
+        //RegionServices has been Injected into this component
+        regionlist = _regionServices.Regions_Get();
+        base.OnInitialized();
+    }
+}
