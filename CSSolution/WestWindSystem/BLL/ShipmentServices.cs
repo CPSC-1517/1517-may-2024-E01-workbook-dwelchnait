@@ -40,7 +40,11 @@ namespace WestWindSystem.BLL
         //    return info.ToList();
         //}
 
+        //This uses the technique (b) discussed on the ShipmentTable page
+        //note there is a required using class, see Additional namespaces above.
         //uses the .Include method to add navigational instances to the return record
+        //note the predicate uses the virtual navigational property of the Shipment entity
+        //This will include the associated record from the Shippers table (parent) for the shipment record (child)
         public List<Shipment> Shipments_GetByYearAndMonth(int year, int month)
         {
             IEnumerable<Shipment> info = _context.Shipments
