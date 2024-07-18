@@ -44,7 +44,31 @@
         <p><strong>Display result of query</strong></p>
         @if (datainfo.Count > 0)
         {
-           
+            <div class="overflow-scroll" style="height:450px;">
+                <table class="table table-striped">
+               <thead>
+                   <tr>
+                       <th>ID</th>
+                       <th>Order</th>
+                       <th>Date</th>
+                       <th>Shipper</th>
+                       <th>Freight $</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   @foreach(var item in datainfo)
+                    {
+                        <tr>
+                            <td>@item.ShipmentID</td>
+                            <td>@item.OrderID</td>
+                            <td>@item.ShippedDate.ToShortDateString()</td>
+                            <td>@item.ShipVia</td>
+                            <td>@(string.Format("{0:#,##0.00}",item.FreightCharge))</td>
+                        </tr>
+                    }
+                </tbody>
+           </table>
+           </div>
         }
         else
         {
@@ -62,9 +86,28 @@
     private int montharg;
 
     private List<Shipment> datainfo = new List<Shipment>();
+    [Inject]
+    private ShipmentServices _shipmentServices { get; set; } 
 
     private void GetByYearAndMonth()
     {
+        feedback = "";
+        errors.Clear();
 
+        if (yeararg < 1950 || yeararg > DateTime.Today.AddDays(1).Year)
+        {
+            errors.Add("Year needs to be between 1950 and today");
+        }
+        if (montharg < 1 || montharg > 12)
+        {
+            errors.Add("Month is invalid, use 1 to 12");
+        }
+        if (errors.Count == 0)
+        {
+            //make the call to the service in the class library BLL service class that you desire
+            //REMEMBER to inject the service class into your page
+            datainfo = _shipmentServices.Shipments_GetByYearAndMonth(yeararg, montharg);
+
+        }
     }
 }

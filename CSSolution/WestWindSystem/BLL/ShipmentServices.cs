@@ -32,7 +32,8 @@ namespace WestWindSystem.BLL
         public List<Shipment> Shipments_GetByYearAndMonth(int year, int month)
         {
             IEnumerable<Shipment> info = _context.Shipments
-                                                .Where(s => s.ShippedDate.Year == year && s.ShippedDate.Month == month)
+                                                .Where(s => s.ShippedDate.Year == year 
+                                                        && s.ShippedDate.Month == month)
                                                 .OrderBy(s => s.ShippedDate);
             return info.ToList();
         }
