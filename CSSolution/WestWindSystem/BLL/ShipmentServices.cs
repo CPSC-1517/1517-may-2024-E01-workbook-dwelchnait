@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 #region Additional Namespaces
 using WestWindSystem.DAL;
 using WestWindSystem.Entities;
+using Microsoft.EntityFrameworkCore; //needed for the .Include method
 #endregion
 
 namespace WestWindSystem.BLL
@@ -29,10 +31,21 @@ namespace WestWindSystem.BLL
         #endregion
 
         /************************ Services *************************************/
+        //public List<Shipment> Shipments_GetByYearAndMonth(int year, int month)
+        //{
+        //    IEnumerable<Shipment> info = _context.Shipments
+        //                                        .Where(s => s.ShippedDate.Year == year 
+        //                                                && s.ShippedDate.Month == month)
+        //                                        .OrderBy(s => s.ShippedDate);
+        //    return info.ToList();
+        //}
+
+        //uses the .Include method to add navigational instances to the return record
         public List<Shipment> Shipments_GetByYearAndMonth(int year, int month)
         {
             IEnumerable<Shipment> info = _context.Shipments
-                                                .Where(s => s.ShippedDate.Year == year 
+                                                .Include(s => s.ShipViaNavigation)
+                                                .Where(s => s.ShippedDate.Year == year
                                                         && s.ShippedDate.Month == month)
                                                 .OrderBy(s => s.ShippedDate);
             return info.ToList();

@@ -87,4 +87,11 @@ public partial class Employee
     [ForeignKey("EmployeeID")]
     [InverseProperty("Employees")]
     public virtual ICollection<Territory> Territories { get; set; } = new List<Territory>();
+
+    //this is a property that does not have data physically stored on the table
+    //this property is very similar to your read-only properties you used in classes
+    //the property needs a special annotation to indicate these characteristics
+
+    [NotMapped]
+    public string FullName { get { return LastName + ", " + FirstName; } }
 }
