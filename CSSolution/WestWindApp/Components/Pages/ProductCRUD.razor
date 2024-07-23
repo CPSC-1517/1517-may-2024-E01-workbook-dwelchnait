@@ -1,0 +1,169 @@
+﻿@page "/productcrud/{productid:int?}"
+
+<!--
+    on the page directive above, a routing parameter has been add
+    this will allow an integer value to be passed to this page
+    the routing parameter (productid) needs to be declare in your code area below
+
+    if you have the situation where your receive page may or maynot receive a parameter
+        value THEN make the datatype nullable (?)
+-->
+@using WestWindSystem.Entities
+@using WestWindSystem.BLL
+
+
+<PageTitle>Product CRUD</PageTitle>
+
+<h3>Product CRUD</h3>
+
+@if (feedbackMessage != null)
+{
+    <div class="alert alert-info">
+        @feedbackMessage
+    </div>
+}
+
+<fieldset>
+    <div class="mb-3">
+        <label for="ProductId" class="form-label">Product ID</label>
+        <input @bind="CurrentProduct.ProductID"
+               type="number"
+               class="form-control"
+               id="ProductId"
+               readonly>
+    </div>
+    <div class="mb-3">
+        <label for="productName" class="form-label">Product Name</label>
+        <input @bind="CurrentProduct.ProductName"
+               type="text"
+               class="form-control"
+               id="productName">
+    </div>
+    <div class="mb-3">
+        <label for="UnitPrice" class="form-label">Unit Price</label>
+        <input @bind="CurrentProduct.UnitPrice"
+               type="number"
+               class="form-control"
+               id="UnitPrice">
+    </div>
+    <div class="mb-3">
+        <label for="categoryid" class="form-label">Category</label>
+        <select @bind="CurrentProduct.CategoryID"
+                type="text"
+                class="form-control"
+                id="categoryid">
+
+            <option value="0">--- select a category---</option>
+            @foreach (var currentCategory in categories)
+            {
+                <option value="@currentCategory.CategoryID" 
+                    selected="@(currentCategory.CategoryID == CurrentProduct.CategoryID)">
+                    @currentCategory.CategoryName
+                </option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="supplierid" class="form-label">Supplier</label>
+        <select @bind="CurrentProduct.SupplierID"
+                type="text"
+                class="form-control"
+                id="supplierid">
+
+            <option value="0">--- select a supplier---</option>
+            @foreach (var currentSupplier in suppliers)
+            {
+                <option value="@currentSupplier.SupplierID" 
+                selected="@(currentSupplier.SupplierID == CurrentProduct.SupplierID)">
+                    @currentSupplier.CompanyName
+                </option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="QuantityPerUnit" class="form-label">Quantity Per Unit</label>
+        <input @bind="CurrentProduct.QuantityPerUnit"
+               type="text"
+               class="form-control"
+               id="QuantityPerUnit">
+    </div>
+
+    <div class="mb-3">
+        <label for="MinimumOrderQuantity" class="form-label">MinimumOrderQuantity</label>
+        <input @bind="CurrentProduct.MinimumOrderQuantity"
+               type="text"
+               class="form-control"
+               id="MinimumOrderQuantity">
+    </div>
+
+    <div class="mb-3">
+        <label for="UnitsOnOrder" class="form-label">Units On Order</label>
+        <input @bind="CurrentProduct.UnitsOnOrder"
+               type="number"
+               class="form-control"
+               id="UnitsOnOrder">
+    </div>
+
+</fieldset>
+<div>
+   
+</div>
+
+@code {
+
+    //this variable is the routing parameter that is indicated on the page directive at the top
+    //      of this page
+    //it needs to be annotation to identify that it is a parameter
+    //the datatype of your field needs to match that of the routing parameter on the page directive
+
+    [Parameter]
+    public int? productId { get; set; }
+
+    private string? feedbackMessage;
+
+    [Inject]
+    private ProductServices _productServices { get; set; }
+    private Product CurrentProduct = new();
+
+    [Inject]
+    private CategoryServices _categoryServices { get; set; }
+    private List<Category> categories = new();
+
+    // private int selectedCategoryId;
+    [Inject]
+    private SupplierServices _supplierServices { get; set; }
+    private List<Supplier> suppliers = new();
+
+    // private int selectedSupplierId;
+
+    [Inject]
+    protected NavigationManager CurrentNavigationManager { get; set; }
+
+    protected override void OnInitialized()
+    {
+        categories = _categoryServices.Categories_Get();
+        suppliers = _supplierServices.Suppliers_Get();
+
+        //when the page is first render, we need to determind if the page was called with
+        //   a pkey parameter value
+        // No value: assumption is a NEW (create) product will be done, nothing to lookup
+        // Yes value: assumption an existing product record will be altered or deleted
+        //            the current record on the database should be displayed to the use
+        //            within this method, lookup the record to display
+
+        if (productId.HasValue)
+        {
+            //retreive the current record from the database that matches the parameter pkey value
+            //the .Value is needed because productId is a nullable int
+            CurrentProduct = _productServices.Products_GetByProductID(productId.Value);
+        }
+        base.OnInitialized();
+    }
+
+    private Exception GetInnerException(Exception ex)
+    {
+        while (ex.InnerException != null)
+            ex = ex.InnerException;
+        return ex;
+    }
+}

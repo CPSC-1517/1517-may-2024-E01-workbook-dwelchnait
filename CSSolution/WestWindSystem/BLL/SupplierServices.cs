@@ -9,10 +9,9 @@ using WestWindSystem.DAL;
 using WestWindSystem.Entities;
 #endregion
 
-
 namespace WestWindSystem.BLL
 {
-    public class CategoryServices
+    public class SupplierServices
     {
         #region setup the context connection variable and class constructor
         private readonly WestWindContext _context;
@@ -20,7 +19,7 @@ namespace WestWindSystem.BLL
         //constructor to be used in the creation of the instance of this class
         //the registered reference for the context connection (database connection)
         //  will be passed from the IServiceCollection registered services
-        internal CategoryServices(WestWindContext registeredcontext)
+        internal SupplierServices(WestWindContext registeredcontext)
         {
             _context = registeredcontext;
         }
@@ -28,9 +27,9 @@ namespace WestWindSystem.BLL
 
         //Queries
 
-        public List<Category> Categories_Get()
+        public List<Supplier> Suppliers_Get()
         {
-            return _context.Categories.OrderBy(c => c.CategoryName).ToList();
+            return _context.Suppliers.OrderBy(s => s.CompanyName).ToList();
         }
     }
 }
