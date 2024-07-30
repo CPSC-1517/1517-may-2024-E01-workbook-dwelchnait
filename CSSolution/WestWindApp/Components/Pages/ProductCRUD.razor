@@ -10,6 +10,7 @@
 -->
 @using WestWindSystem.Entities
 @using WestWindSystem.BLL
+@inject IJSRuntime JSRunTime
 
 
 <PageTitle>Product CRUD</PageTitle>
@@ -130,6 +131,15 @@
             @onclick="OnClickUpdate">
         Update
     </button> *@
+    &nbsp;&nbsp;
+    @if(CurrentProduct.ProductID != 0)
+    {
+        <button type="submit" class="btn btn-outline-secondary rounded-pill"
+                @onclick="OnClickDiscontinue">
+            Discontinue
+        </button>
+    }
+
     &nbsp;&nbsp;
     <button type="submit" class="btn btn-outline-secondary rounded-pill"
             @onclick="OnClickReturnQuery">
@@ -349,6 +359,66 @@
     //     }
     // }
 
+    private async Task OnClickDiscontinue()
+    {
+        //consider giving the user a second chance to avoid a "bad" mistake
+        //  in deleting a record
+        //you can prompt the user to confirm that this action needs to be done
+        //if you are using the confirmation then the method should be an async Task method
+
+        //clear old messages
+        feedbackMessage = "";
+        errors.Clear();
+
+        //issue a prompt dialogue to the user to obtain confirmation of the action
+        object[] messageline = new object[] {$"Are you sure you want to discountinue {CurrentProduct.ProductName}?"};
+        if ( await JSRunTime.InvokeAsync<bool>("confirm",messageline))
+        {
+            try
+            {
+                //you could set the logical field here in your event
+                // OR
+                //it could be set in the service method
+                //it does not hurt to do it in both places
+                //in our example we handle the setting of this field in the service method
+
+                CurrentProduct.Discontinued = true; //this is optional
+
+                int rowsaffected = _productServices.Products_LogicalDelete(CurrentProduct);
+
+                //if an exception happened in the class library or database, execution
+                //  will continue in the catch
+
+                //successful Update
+                //communicate the results to the user
+                if (rowsaffected == 0)
+                {
+                    feedbackMessage = $"Product {CurrentProduct.ProductName} is no long on file. " +
+                    $" Check to see if product is still on file.";
+                }
+                else
+                {
+
+                    feedbackMessage = $"Product (ID:{CurrentProduct.ProductID}) has been discontinued.";
+                    //update  the discontinue attribute on our local copy of the instance
+                    CurrentProduct.Discontinued = true;
+                }
+
+            }
+            catch (ArgumentNullException ex)
+            {
+                errors.Add($"Save Error: {GetInnerException(ex).Message}");
+            }
+            catch (ArgumentException ex)
+            {
+                errors.Add($"Save Error: {GetInnerException(ex).Message}");
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"Save Error: {GetInnerException(ex).Message}");
+            }
+        }
+    }
     private void OnClickReturnQuery()
     {
         CurrentNavigationManager.NavigateTo("./categoryproducts");
