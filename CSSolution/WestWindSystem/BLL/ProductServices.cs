@@ -148,7 +148,7 @@ namespace WestWindSystem.BLL
             //in the update, we still do not want duplicate products under different ids
             //we will need to alter the Add version so that the current product is NOT
             //  include in the check
-            bool exists = exists = _context.Products
+            bool exists =  _context.Products
                         .Any(p => p.SupplierID == item.SupplierID
                                && p.ProductName.Equals(item.ProductName)
                                && p.QuantityPerUnit == item.QuantityPerUnit
@@ -168,7 +168,99 @@ namespace WestWindSystem.BLL
 
             return _context.SaveChanges();
         }
-            #endregion
+            
+        //Delete: cruD
+        //there are two types of deletes: physical and logical
+        //Whether you have a physical or logical delete is determind WHEN
+        //  the system is designed (database, data requirements)
+
+        //Logical delete
+        //this happens when the recorde is deemed "unwanted" BUT CANNOT be 
+        //  physically removed from the database because the records has
+        //  a relationship to another records (parent/child) and the associated record
+        //  CANNOT be removed
+
+        //Example: The product record is a parent to ManitfestItems records
+        //         The the manitest record is need for tracking, it does to the receiver of the product
+        //so, because the other record(s) are required for the busines
+        //      one CANNOT physically remove the ("parent") product record.
+
+        //usually in this situation, the parent record (product) will have some type of field
+        //  that will indicate "deleted"
+        //on the product record such a field is the Discontinued field
+
+        //Qustion: If the record will not be deleted, what happens?
+        //Answer: here, you will actually do an update
+        //Within the method, it is a good practice NOT to rely on the user to set
+        //  the "logical delete" field to the delete status
+        //Your method should set the value
+
+        public int Products_LogicalDelete(Product item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("You must supply the product information");
+
+            //does the product exist on the database
+            //since the user could possible change data on the form, it is best
+            //  to obtain the current data from the database
+            //the only value to change on the current record is the field to indicate removal
+            Product exists = _context.Products
+                       .FirstOrDefault(p =>  p.ProductID != item.ProductID);
+            if (exists == null)
+                throw new ArgumentException($"Product {item.ProductName} " +
+                    $" (id:{item.ProductID}) is no longer on file.");
+
+            //have the method actually set the removal field to the appropriate value
+            exists.Discontinued = true;
+
+            //Staging
+            EntityEntry<Product> updating = _context.Entry(exists);
+            updating.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+            //Commit
+            //the return value from the database for an update is the number of rows affected
+
+            return _context.SaveChanges();
+        }
+
+        //Physical Delete
+        //you physically remove the record from the database
+        //IF there are no "child" records to prevent the record removal, you can remove the record
+        //IF there are "children" AND the "children" are not required, you can remove the record
+        //      HOWEVER, you will need to first remove any "children" before removing the parent record
+        //      assuming there is no cascade delete setup on the database
+
+        public int Products_PhysicalDelete(Product item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("You must supply the product information");
+
+            //does the product exist on the database
+           
+            Product exists = _context.Products
+                       .FirstOrDefault(p => p.ProductID != item.ProductID);
+            if (exists == null)
+                throw new ArgumentException($"Product {item.ProductName} " +
+                    $" (id:{item.ProductID}) is no longer on file.");
+
+            //optional check, but good practice
+            int existingChildren = exists.ManifestItems.Count();
+            existingChildren += exists.OrderDetails.Count();
+
+            if (existingChildren > 0)
+                throw new ArgumentException($"Product {item.ProductName} " +
+                    $" (id:{item.ProductID}) has related information on file. Unable to delete.");
+
+            //Staging
+            EntityEntry<Product> deleting = _context.Entry(exists);
+            deleting.State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+
+            //Commit
+            //the return value from the database for an update is the number of rows affected
+
+            return _context.SaveChanges();
+        }
+        #endregion
 
     }//eoc
 }//eon

@@ -122,13 +122,18 @@
 <div>
    @* this area will be for the form buttons*@
    <button type="submit" class="btn btn-outline-primary rounded-pill"
-                @onclick="OnClickSave">
-            Create
+                @onclick="OnClickSave" style="width:137px;">
+      @(CurrentProduct.ProductID == 0 ? "Create" : "Update")
     </button>
-    &nbsp;&nbsp;
+   @*  &nbsp;&nbsp;
     <button type="submit" class="btn btn-outline-primary rounded-pill"
             @onclick="OnClickUpdate">
         Update
+    </button> *@
+    &nbsp;&nbsp;
+    <button type="submit" class="btn btn-outline-secondary rounded-pill"
+            @onclick="OnClickReturnQuery">
+        Go to query
     </button>
 </div>
 
@@ -217,26 +222,52 @@
             //all local validation is done
             if (errors.Count == 0)
             {
-                //assume the data is correct
+                if (CurrentProduct.ProductID == 0)
+                {
+                    //assume the data is correct
 
-                //Create (ADD) in Crud
-                //this is a new product
-                //Discontinued will be set to false (datatype default)
+                    //Create (ADD) in Crud
+                    //this is a new product
+                    //Discontinued will be set to false (datatype default)
 
-                //remember we have setup the form to fill an instance ov Product
-                //the data on the form has ALREADY been placed into the instance
-                //the ADD service will return the new ProductID
-                //pass the data from the form into the class library BLL Method
-                int newProductID = _productServices.Products_AddProduct(CurrentProduct);
+                    //remember we have setup the form to fill an instance ov Product
+                    //the data on the form has ALREADY been placed into the instance
+                    //the ADD service will return the new ProductID
+                    //pass the data from the form into the class library BLL Method
+                    int newProductID = _productServices.Products_AddProduct(CurrentProduct);
 
-                //if an exception happened in the class library or database, execution
-                //  will continue in the catch
+                    //if an exception happened in the class library or database, execution
+                    //  will continue in the catch
 
-                //successful Add
-                //communicate the results to the user
-                feedbackMessage = $"Product (ID:{newProductID}) has been added.";
-                //update the form: change the readonly field ProductID to show the new ProductID
-                CurrentProduct.ProductID = newProductID;
+                    //successful Add
+                    //communicate the results to the user
+                    feedbackMessage = $"Product (ID:{newProductID}) has been added.";
+                    //update the form: change the readonly field ProductID to show the new ProductID
+                    CurrentProduct.ProductID = newProductID;
+                }
+                else
+                {
+                    //Update (Update) in crUd
+                    //this is an existing product
+
+
+                    int rowsaffected = _productServices.Products_UpdateProduct(CurrentProduct);
+
+                    //if an exception happened in the class library or database, execution
+                    //  will continue in the catch
+
+                    //successful Update
+                    //communicate the results to the user
+                    if (rowsaffected == 0)
+                    {
+                        feedbackMessage = $"Product {CurrentProduct.ProductName} has not been updated. " +
+                        $" Check to see if product is still on file.";
+                    }
+                    else
+                    {
+                        feedbackMessage = $"Product (ID:{CurrentProduct.ProductID}) has been updated.";
+                    }
+                }
             }
         }
         catch(ArgumentNullException ex)
@@ -253,68 +284,73 @@
         }
     }
 
-    private void OnClickUpdate()
+    // private void OnClickUpdate()
+    // {
+    //     //clean out any old messages
+    //     feedbackMessage = "";
+    //     errors.Clear();
+
+    //     //any validation of form data to be done on the web page
+
+    //     try
+    //     {
+    //         //all primitive validation should be done at this point
+    //         //primitive validation
+    //         //  presents
+    //         //  datatype
+    //         //  range
+    //         //  limit
+    //         //sample validation
+    //         //check that the category has been picked
+    //         if (CurrentProduct.CategoryID == 0)
+    //         {
+    //             errors.Add("You must select a category");
+    //         }
+
+    //         //all local validation is done
+    //         if (errors.Count == 0)
+    //         {
+    //             //assume the data is correct
+
+    //             //Update (Update) in crUd
+    //             //this is an existing product
+
+
+    //             int rowsaffected = _productServices.Products_UpdateProduct(CurrentProduct);
+
+    //             //if an exception happened in the class library or database, execution
+    //             //  will continue in the catch
+
+    //             //successful Update
+    //             //communicate the results to the user
+    //             if (rowsaffected == 0)
+    //             {
+    //                 feedbackMessage = $"Product {CurrentProduct.ProductName} has not been updated. " +
+    //                 $" Check to see if product is still on file.";
+    //             }
+    //             else
+    //             {
+    //                 feedbackMessage = $"Product (ID:{CurrentProduct.ProductID}) has been updated.";
+    //             }
+
+    //         }
+    //     }
+    //     catch (ArgumentNullException ex)
+    //     {
+    //         errors.Add($"Save Error: {GetInnerException(ex).Message}");
+    //     }
+    //     catch (ArgumentException ex)
+    //     {
+    //         errors.Add($"Save Error: {GetInnerException(ex).Message}");
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         errors.Add($"Save Error: {GetInnerException(ex).Message}");
+    //     }
+    // }
+
+    private void OnClickReturnQuery()
     {
-        //clean out any old messages
-        feedbackMessage = "";
-        errors.Clear();
-
-        //any validation of form data to be done on the web page
-
-        try
-        {
-            //all primitive validation should be done at this point
-            //primitive validation
-            //  presents
-            //  datatype
-            //  range
-            //  limit
-            //sample validation
-            //check that the category has been picked
-            if (CurrentProduct.CategoryID == 0)
-            {
-                errors.Add("You must select a category");
-            }
-
-            //all local validation is done
-            if (errors.Count == 0)
-            {
-                //assume the data is correct
-
-                //Update (Update) in crUd
-                //this is an existing product
-
-
-                int rowsaffected = _productServices.Products_UpdateProduct(CurrentProduct);
-
-                //if an exception happened in the class library or database, execution
-                //  will continue in the catch
-
-                //successful Update
-                //communicate the results to the user
-                if (rowsaffected == 0)
-                {
-                    feedbackMessage = $"Product {CurrentProduct.ProductName} has not been updated. " +
-                    $" Check to see if product is still on file.";
-                }
-                else
-                {
-                    feedbackMessage = $"Product (ID:{CurrentProduct.ProductID}) has been updated.";
-                }
-            
-            }
-        }
-        catch (ArgumentNullException ex)
-        {
-            errors.Add($"Save Error: {GetInnerException(ex).Message}");
-        }
-        catch (ArgumentException ex)
-        {
-            errors.Add($"Save Error: {GetInnerException(ex).Message}");
-        }
-        catch (Exception ex)
-        {
-            errors.Add($"Save Error: {GetInnerException(ex).Message}");
-        }
+        CurrentNavigationManager.NavigateTo("./categoryproducts");
     }
 }
