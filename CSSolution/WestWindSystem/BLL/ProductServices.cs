@@ -205,7 +205,7 @@ namespace WestWindSystem.BLL
             //  to obtain the current data from the database
             //the only value to change on the current record is the field to indicate removal
             Product exists = _context.Products
-                       .FirstOrDefault(p =>  p.ProductID != item.ProductID);
+                       .FirstOrDefault(p =>  p.ProductID == item.ProductID);
             if (exists == null)
                 throw new ArgumentException($"Product {item.ProductName} " +
                     $" (id:{item.ProductID}) is no longer on file.");
@@ -238,7 +238,7 @@ namespace WestWindSystem.BLL
             //does the product exist on the database
            
             Product exists = _context.Products
-                       .FirstOrDefault(p => p.ProductID != item.ProductID);
+                       .FirstOrDefault(p => p.ProductID == item.ProductID);
             if (exists == null)
                 throw new ArgumentException($"Product {item.ProductName} " +
                     $" (id:{item.ProductID}) is no longer on file.");
