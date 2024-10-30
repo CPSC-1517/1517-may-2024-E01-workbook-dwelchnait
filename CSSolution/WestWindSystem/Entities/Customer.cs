@@ -29,6 +29,7 @@ public partial class Customer
 
     [Required]
     [StringLength(50)]
+    [EmailAddress(ErrorMessage = "Invalid email address.")]
     public string ContactEmail { get; set; }
 
     public int AddressID { get; set; }

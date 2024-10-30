@@ -19,6 +19,7 @@ public partial class Shipper
 
     [Required]
     [StringLength(24)]
+    [RegularExpression("^\\(\\d{3}\\) \\d{3}-\\d{4}$",ErrorMessage ="Invalid phone number: (xxx) xxx-xxxx")]
     public string Phone { get; set; }
 
     [InverseProperty("ShipViaNavigation")]
