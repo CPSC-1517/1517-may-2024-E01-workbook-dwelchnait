@@ -24,6 +24,7 @@ public partial class Product
 
     public int SupplierID { get; set; }
 
+    
     public int CategoryID { get; set; }
 
     [Required(ErrorMessage = "Quanity per Unit is required")]
