@@ -92,7 +92,8 @@
                             <td>@item.ShipmentID</td>
                             <td>@item.OrderID</td>
                             <td>@item.ShippedDate.ToShortDateString()</td>
-                            <td>@item.ShipViaNavigation.CompanyName</td>
+                            <td>@item.ShipVia</td>
+                          @*   <td>@item.ShipViaNavigation.CompanyName</td> *@
                             <td>@(string.Format("{0:#,##0.00}",item.FreightCharge))</td>
                         </tr>
                     }
