@@ -1,0 +1,180 @@
+﻿@page "/productcrudeditform/{productid:int?}"
+@rendermode InteractiveServer
+<!--
+    on the page directive above, a routing parameter has been add
+    this will allow an integer value to be passed to this page
+    the routing parameter (productid) needs to be declare in your code area below
+
+    if you have the situation where your receive page may or maynot receive a parameter
+        value THEN make the datatype nullable (?)
+-->
+@* @using WestWindSystem.Entities
+@using WestWindSystem.BLL *@
+@* @inject IJSRuntime JSRunTime *@
+
+
+<PageTitle>Product CRUD</PageTitle>
+
+<h3>Product CRUD</h3>
+
+@if (feedbackMessage.Length > 0)
+{
+    <div class="alert alert-info">
+        @feedbackMessage
+    </div>
+}
+<!-- area to error messages-->
+@if (errors.Count > 0)
+{
+    <div class="alert alert-danger">
+        <p>Please fix the following issues:</p>
+        <ul>
+            @foreach (var error in errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+
+
+<!--
+    EditContext registers my EditContext instance for this form 
+    DataAnnotationsValidator   the DataAnnotationsValidator component is used within an 
+                                EditForm to enable validation based on data annotations 
+                                applied to model properties.
+    ValidationSummary displays a list of all validation errors
+                      show a summary of errors at the top of the form 
+                      errors can be from model properties or custom messages
+-->
+<EditForm EditContext="@editContext">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+ <div class="row">
+     <div class="offset-1 col-md-5">
+        <div class="mb-3">
+            <label for="productpd" class="form-label">Product ID</label>
+            <!-- bind-Value is required when using EditForm controls
+                 EditForm controls are self closing
+                 no type is need for the EditForm control-->
+            <InputNumber @bind-Value="CurrentProduct.ProductID"                   
+                   class="form-control"
+                   id="productid"
+                   readonly />
+        </div>
+        <div class="mb-3">
+            <label for="productname" class="form-label">Product Name</label>
+            <InputText @bind-Value="CurrentProduct.ProductName"
+                   class="form-control"
+                   id="productname" />
+            <!-- ValidationMessage allows for the display of an annotation message
+                 associated with the indicated entity property
+            -->
+            <ValidationMessage For="@(() => CurrentProduct.ProductName)" />
+        </div>
+        <div class="mb-3">
+            <label for="categoryid" class="form-label">Category</label>
+            <!-- InputSelect is not self closing, must have a closing tag
+            -->
+            <InputSelect @bind-Value="CurrentProduct.CategoryID"
+                    class="form-control"
+                    id="categoryid" >
+
+                <option value="0">--- select a category---</option>
+                @foreach (var currentCategory in categories)
+                {
+                    <option value="@currentCategory.CategoryID"
+                            selected="@(currentCategory.CategoryID == CurrentProduct.CategoryID)">
+                        @currentCategory.CategoryName
+                    </option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => CurrentProduct.CategoryID)" />
+        </div>
+        <div class="mb-3">
+            <label for="supplierid" class="form-label">Supplier</label>
+            <InputSelect @bind-Value="CurrentProduct.SupplierID"
+                    class="form-control"
+                    id="supplierid">
+
+                <option value="0">--- select a supplier---</option>
+                @foreach (var currentSupplier in suppliers)
+                {
+                    <option value="@currentSupplier.SupplierID"
+                            selected="@(currentSupplier.SupplierID == CurrentProduct.SupplierID)">
+                        @currentSupplier.CompanyName
+                    </option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => CurrentProduct.SupplierID)" />
+        </div>
+     </div>
+     <div class="col-md-5">
+        <div class="mb-3">
+            <label for="QuantityPerUnit" class="form-label">Quantity Per Unit</label>
+            <InputText @bind-Value="CurrentProduct.QuantityPerUnit"
+                   class="form-control"
+                   id="QuantityPerUnit" />
+            <ValidationMessage For="@(() => CurrentProduct.QuantityPerUnit)" />
+        </div>
+        <div class="mb-3">
+            <label for="unitprice" class="form-label">Unit Price</label>
+            <InputNumber @bind-Value="CurrentProduct.UnitPrice"
+                         class="form-control"
+                         id="unitprice" />
+            <ValidationMessage For="@(() => CurrentProduct.UnitPrice)" />
+        </div>
+        <div class="mb-3">
+            <label for="minimumorderquantity" class="form-label">MinimumOrderQuantity</label>
+            <InputNumber @bind-Value="CurrentProduct.MinimumOrderQuantity"
+                   class="form-control"
+                   id="minimumorderquantity" />
+            <ValidationMessage For="@(() => CurrentProduct.MinimumOrderQuantity)" />
+        </div>
+        <div class="mb-3">
+            <label for="unitsonorder" class="form-label">Units On Order</label>
+            <InputNumber @bind-Value="CurrentProduct.UnitsOnOrder"
+                   class="form-control"
+                   id="unitsonorder" />
+            <ValidationMessage For="@(() => CurrentProduct.UnitsOnOrder)" />
+        </div>
+     </div>
+ </div>
+ <div class="row">
+     <div class="col-md-12 text-center">
+
+       @* this area will be for the form buttons*@
+       <button type="button" class="btn btn-outline-primary rounded-pill"
+                    @onclick="OnClickSave" style="width:137px;">
+          @(CurrentProduct.ProductID == 0 ? "Create" : "Update")
+        </button>
+       @*  &nbsp;&nbsp;
+        <button type="submit" class="btn btn-outline-primary rounded-pill"
+                @onclick="OnClickUpdate">
+            Update
+        </button> *@
+        &nbsp;&nbsp;
+        @if(CurrentProduct.ProductID != 0)
+        {
+            <button type="button" class="btn btn-outline-secondary rounded-pill"
+                    @onclick="OnClickDiscontinue" style="width:137px;">
+                Discontinue
+            </button>
+        }
+
+        &nbsp;&nbsp;
+        <button type="button" class="btn btn-outline-secondary rounded-pill"
+                    @onclick="OnClickReturnQuery" style="width:137px;">
+            Go to query
+        </button>
+    </div>
+</div>
+</EditForm>
+
+@code {
+
+ 
+
+   
+}

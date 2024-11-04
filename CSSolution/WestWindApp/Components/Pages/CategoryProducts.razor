@@ -49,8 +49,11 @@
                 will navigate to the new page
         -->
         &nbsp;
-        <button type="submit" class="btn btn-outline-secondary rounded-pill">
+       @*  <button type="submit" class="btn btn-outline-secondary rounded-pill">
             <NavLink href="productcrud">CRUD via Navlink</NavLink>
+        </button> *@
+        <button type="submit" class="btn btn-outline-secondary rounded-pill">
+            <NavLink href="productcrudeditform">CRUD via Navlink</NavLink>
         </button>
         &nbsp;
         <button type="submit" class="btn btn-outline-secondary rounded-pill"
@@ -104,7 +107,8 @@
                         //           on this page add the parameter value to send to the href
                         <tr>
                             <td>
-                                <a href="/productcrud/@item.ProductID">Edit</a>
+                               @*  <a href="/productcrud/@item.ProductID">Edit</a> *@
+                                <a href="/productcrudeditform/@item.ProductID">Edit</a>
                             </td>
                             <td>@item.ProductName</td>
                             <td>@item.QuantityPerUnit</td>
@@ -193,6 +197,6 @@
         //this event will use the Navigate services of the web software
         //the Navigate services must be injected into the page
         //the location your are going to is referenced by the page's routing parameter
-        _navManager.NavigateTo("productcrud");
+        _navManager.NavigateTo("productcrudeditform");
     }
 }

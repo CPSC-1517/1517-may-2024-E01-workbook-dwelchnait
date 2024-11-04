@@ -26,6 +26,7 @@ public partial class Address
     public string Region { get; set; }
 
     [StringLength(10)]
+    [RegularExpression("^[A-Za-z]\\d[A-Za-z] \\d[A-Za-z]\\d$", ErrorMessage ="Invalid postal code: eg. T6Y 7U8")]
     public string PostalCode { get; set; }
 
     [Required]
